@@ -26,7 +26,7 @@ This library should solve all these problems with a helper function:
 
 import logging
 
-__all__ = ['get_logger']
+__all__ = ['get_logger', 'l_', 'log_']
 
 class NullLogger(logging.Logger):
     def _log(self, *args, **kwargs):
@@ -45,3 +45,19 @@ def get_logger(name, log=True):
     fake_logger = NullLogger('__log_proxy')
     return fake_logger
 
+def log_(name, get_logger_=None):
+    """Return a Logger for the specified name. If get_logger is None, use
+    Python's default getLogger.
+    """
+    get_func = get_logger_ if (get_logger_ is not None) else logging.getLogger
+    return get_func(name)
+
+def l_(log):
+    """Return a NullLogger if log is None.
+
+    This is useful if logging should only happen to optional loggers passed
+    from callers and you don't want clutter the code with "if log is not None"
+    conditions."""
+    if log is None:
+        return NullLogger('__log_proxy')
+    return log
