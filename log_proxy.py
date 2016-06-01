@@ -36,14 +36,27 @@ class NullLogger(logging.Logger):
         pass
 
 
-def get_logger(name, log=True):
+class ContextAdapter(logging.LoggerAdapter):
+    def process(self, msg, kwargs):
+        if not self.extra:
+            return (msg, kwargs)
+        extra_data = tuple(self.extra.items())
+        assert len(extra_data) == 1
+        ctx_value = extra_data[0][1]
+        adapted_msg = '[%s] %s' % (ctx_value, msg)
+        return (adapted_msg, kwargs)
+
+def get_logger(name, log=True, context=None):
     if not log:
         fake_logger = NullLogger('__log_proxy')
         return fake_logger
 
     if not isinstance(log, logging.Logger):
         log = logging.getLogger(name)
-    return log
+    if context is None:
+        return log
+    adapter = ContextAdapter(log, {'context': context})
+    return adapter
 
 
 def log_(name, get_logger_=None):
