@@ -37,13 +37,14 @@ class NullLogger(logging.Logger):
 
 
 def get_logger(name, log=True):
-    if isinstance(log, logging.Logger):
-        return log
-    elif log:
-        return logging.getLogger(name)
+    if not log:
+        fake_logger = NullLogger('__log_proxy')
+        return fake_logger
 
-    fake_logger = NullLogger('__log_proxy')
-    return fake_logger
+    if not isinstance(log, logging.Logger):
+        log = logging.getLogger(name)
+    return log
+
 
 def log_(name, get_logger_=None):
     """Return a Logger for the specified name. If get_logger is None, use
