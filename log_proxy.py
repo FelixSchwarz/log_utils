@@ -129,12 +129,12 @@ def log_(name, get_logger_=None):
     get_func = get_logger_ if (get_logger_ is not None) else logging.getLogger
     return get_func(name)
 
-def l_(log):
+def l_(log, fallback=None):
     """Return a NullLogger if log is None.
 
     This is useful if logging should only happen to optional loggers passed
     from callers and you don't want clutter the code with "if log is not None"
     conditions."""
     if log is None:
-        return NullLogger('__log_proxy')
+        return NullLogger('__log_proxy') if (fallback is None) else fallback
     return log
