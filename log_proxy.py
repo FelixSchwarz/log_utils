@@ -25,6 +25,7 @@ This library should solve all these problems with a helper function:
 """
 
 import logging
+from logging.handlers import MemoryHandler
 
 __all__ = ['contextfile_logger', 'get_logger', 'l_', 'log_', 'ForwardingLogger']
 
@@ -99,6 +100,32 @@ def contextfile_logger(logger_name, log_path=None, handler=None, **kwargs):
         ))
     log.addHandler(handler)
     return log
+
+
+class CollectingHandler(MemoryHandler):
+    """
+    This handler collects log messages until the buffering capacity is
+    exhausted or a message equal/above a certain level was logged. After the
+    first (automatic) flush buffering is disabled (manual calls to .flush()
+    do not disable buffering).
+    Flushing only works if a target was set.
+    """
+    def __init__(self, capacity=10000, flush_level=logging.ERROR, target=None):
+        super().__init__(capacity, flushLevel=flush_level, target=target)
+
+    def shouldFlush(self, record):
+        should_flush = super().shouldFlush(record)
+        if should_flush and self.capacity > 0:
+            # disable buffering after the first flush was necessary...
+            self.capacity = 0
+        return should_flush
+
+    def set_target(self, target, disable_buffering=False):
+        self.target = target
+        if disable_buffering:
+            self.capacity = 0
+            self.flush()
+    setTarget = set_target
 
 
 class ContextAdapter(logging.LoggerAdapter):
