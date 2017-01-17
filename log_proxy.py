@@ -72,7 +72,8 @@ class ForwardingLogger(logging.Logger):
                 msg = self._forward_prefix + msg
             self._forward_to.log(record.levelno, msg, *record.args)
 
-def contextfile_logger(logger_name, log_path, **kwargs):
+
+def contextfile_logger(logger_name, log_path=None, handler=None, **kwargs):
     """
     Return a ForwardingLogger which logs to the given logfile.
 
@@ -85,17 +86,18 @@ def contextfile_logger(logger_name, log_path, **kwargs):
         forward_minlevel=kwargs.pop('forward_minlevel', logging.NOTSET),
         **kwargs
     )
-    # The logging module does not keep a reference to this FileHandler anywhere
-    # as we are instantiating it directly (not by name or fileconfig).
-    # That means Python's garbage collection will work just fine and the
-    # underlying log file will be closed when our batch-specific
-    # ForwardingLogger goes out of scope.
-    file_handler = logging.FileHandler(log_path)
-    file_handler.setFormatter(logging.Formatter(
-        fmt='%(asctime)s %(message)s',
-        datefmt='%Y-%m-%d %H:%M:%S'
-    ))
-    log.addHandler(file_handler)
+    if handler is None:
+        # The logging module does not keep a reference to this FileHandler anywhere
+        # as we are instantiating it directly (not by name or fileconfig).
+        # That means Python's garbage collection will work just fine and the
+        # underlying log file will be closed when our batch-specific
+        # ForwardingLogger goes out of scope.
+        handler = logging.FileHandler(log_path)
+        handler.setFormatter(logging.Formatter(
+            fmt='%(asctime)s %(message)s',
+            datefmt='%Y-%m-%d %H:%M:%S'
+        ))
+    log.addHandler(handler)
     return log
 
 
