@@ -92,7 +92,7 @@ def contextfile_logger(logger_name, log_path=None, handler=None, **kwargs):
         # That means Python's garbage collection will work just fine and the
         # underlying log file will be closed when our batch-specific
         # ForwardingLogger goes out of scope.
-        handler = logging.FileHandler(log_path)
+        handler = logging.FileHandler(log_path, delay=True)
         handler.setFormatter(logging.Formatter(
             fmt='%(asctime)s %(message)s',
             datefmt='%Y-%m-%d %H:%M:%S'
