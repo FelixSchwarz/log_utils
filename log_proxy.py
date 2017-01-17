@@ -66,7 +66,7 @@ class ForwardingLogger(logging.Logger):
     def callHandlers(self, record):
         super(ForwardingLogger, self).callHandlers(record)
         # "logging.NOTSET" (default) is defined as 0 so that works here just fine
-        if record.levelno >= self._forward_minlevel:
+        if (record.levelno >= self._forward_minlevel) and (self._forward_to is not None):
             msg = record.msg
             if self._forward_prefix:
                 msg = self._forward_prefix + msg
@@ -81,7 +81,7 @@ def contextfile_logger(logger_name, log_path=None, handler=None, **kwargs):
     to create log files which are placed near the data they are referring to.
     """
     log = ForwardingLogger(logger_name,
-        forward_to=kwargs.pop('forward_to'),
+        forward_to=kwargs.pop('forward_to', None),
         forward_prefix=kwargs.pop('forward_prefix', None),
         forward_minlevel=kwargs.pop('forward_minlevel', logging.NOTSET),
         **kwargs
