@@ -59,6 +59,9 @@ class ForwardingLogger(logging.Logger):
          here...
     """
     def __init__(self, *args, **kwargs):
+        if len(args) == 0:
+            name = self.__class__.__name__
+            args = (name,)
         self._forward_to = kwargs.pop('forward_to')
         self._forward_prefix = kwargs.pop('forward_prefix', None)
         self._forward_minlevel = kwargs.pop('forward_minlevel', logging.NOTSET)
