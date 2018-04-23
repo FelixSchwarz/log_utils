@@ -27,7 +27,10 @@ This library should solve all these problems with a helper function:
 import logging
 from logging.handlers import MemoryHandler
 
-__all__ = ['contextfile_logger', 'get_logger', 'l_', 'log_', 'ForwardingLogger']
+__all__ = [
+    'contextfile_logger', 'get_logger', 'l_', 'log_', 'ForwardingLogger',
+    'CollectingHandler',
+]
 
 # This is added for backwards-compatibility with Python 2.6
 class NullLogger(logging.Logger):
