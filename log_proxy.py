@@ -62,12 +62,12 @@ class ForwardingLogger(logging.Logger):
          here...
     """
     def __init__(self, *args, **kwargs):
-        if len(args) == 0:
-            name = self.__class__.__name__
-            args = (name,)
         self._forward_to = kwargs.pop('forward_to')
         self._forward_prefix = kwargs.pop('forward_prefix', None)
         self._forward_minlevel = kwargs.pop('forward_minlevel', logging.NOTSET)
+        if (not args) and ('name' not in kwargs):
+            name = self.__class__.__name__
+            args = (name, )
         super(ForwardingLogger, self).__init__(*args, **kwargs)
 
     def callHandlers(self, record):
