@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2013-2017 Felix Schwarz
+# Copyright (c) 2013-2017, 2019 Felix Schwarz
 # The source code contained in this file is licensed under the MIT license.
+# SPDX-License-Identifier: MIT
 """
 logging is often helpful to find problems in deployed code.
 
@@ -144,13 +145,14 @@ class ContextAdapter(logging.LoggerAdapter):
         adapted_msg = '[%s] %s' % (ctx_value, msg)
         return (adapted_msg, kwargs)
 
-def get_logger(name, log=True, context=None):
-    if not log:
-        fake_logger = NullLogger('__log_proxy')
-        return fake_logger
 
-    if not isinstance(log, logging.Logger):
+def get_logger(name, log=True, context=None, level=None):
+    if not log:
+        log = NullLogger('__log_proxy')
+    elif not isinstance(log, logging.Logger):
         log = logging.getLogger(name)
+    if level is not None:
+        log.setLevel(level)
     if context is None:
         return log
     adapter = ContextAdapter(log, {'context': context})
