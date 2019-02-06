@@ -47,6 +47,7 @@ class ForwardingLogger(logging.Logger):
     This logger fowards messages above a certain level (by default: all messages)
     to a configured parent logger. Optionally it can prepend the configured
     "forward_prefix" to all *forwarded* log messages.
+    "forward_suffix" works like "forward_prefix" but appends some string.
 
     Python's default logging module can not handle this because
       a) a logger's log level is only applied for messages emitted directly on
@@ -65,6 +66,7 @@ class ForwardingLogger(logging.Logger):
     def __init__(self, *args, **kwargs):
         self._forward_to = kwargs.pop('forward_to')
         self._forward_prefix = kwargs.pop('forward_prefix', None)
+        self._forward_suffix = kwargs.pop('forward_suffix', None)
         self._forward_minlevel = kwargs.pop('forward_minlevel', logging.NOTSET)
         if (not args) and ('name' not in kwargs):
             name = self.__class__.__name__
@@ -78,6 +80,8 @@ class ForwardingLogger(logging.Logger):
             msg = record.msg
             if self._forward_prefix:
                 msg = self._forward_prefix + msg
+            if self._forward_suffix:
+                msg += self._forward_suffix
             self._forward_to.log(record.levelno, msg, *record.args)
 
 
