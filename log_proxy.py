@@ -27,6 +27,8 @@ This library should solve all these problems with a helper function:
 
 import logging
 from logging.handlers import MemoryHandler
+import sys
+
 
 __all__ = [
     'contextfile_logger', 'get_logger', 'l_', 'log_', 'ForwardingLogger',
@@ -74,7 +76,10 @@ class ForwardingLogger(logging.Logger):
         super(ForwardingLogger, self).__init__(*args, **kwargs)
 
     def callHandlers(self, record):
-        super(ForwardingLogger, self).callHandlers(record)
+        nr_handlers = self._call_handlers(record)
+        if self._forward_to is None:
+            self._emit_last_resort_message(record, nr_handlers)
+
         # "logging.NOTSET" (default) is defined as 0 so that works here just fine
         if (record.levelno >= self._forward_minlevel) and (self._forward_to is not None):
             msg = record.msg
@@ -83,6 +88,36 @@ class ForwardingLogger(logging.Logger):
             if self._forward_suffix:
                 msg += self._forward_suffix
             self._forward_to.log(record.levelno, msg, *record.args)
+
+    def _call_handlers(self, record):
+        # ,--- mostly copied from logging.Logger.callHandlers -----------------
+        logger = self
+        nr_found = 0
+        while logger:
+            for handler in logger.handlers:
+                nr_found = nr_found + 1
+                if record.levelno >= handler.level:
+                    handler.handle(record)
+            if logger.propagate:
+                logger = logger.parent
+            else:
+                break
+        return nr_found
+        # `--- end copy -------------------------------------------------------
+
+    def _emit_last_resort_message(self, record, nr_handlers):
+        # ,--- mostly copied from logging.Logger.callHandlers -----------------
+        if nr_handlers > 0:
+            return
+        if logging.lastResort:
+            if record.levelno >= logging.lastResort.level:
+                logging.lastResort.handle(record)
+        elif logging.raiseExceptions and not self.manager.emittedNoHandlerWarning:
+            sys.stderr.write("No handlers could be found for logger"
+                             " \"%s\"\n" % self.name)
+            self.manager.emittedNoHandlerWarning = True
+        # `--- end copy -------------------------------------------------------
+
 
 
 def contextfile_logger(logger_name, log_path=None, handler=None, **kwargs):
