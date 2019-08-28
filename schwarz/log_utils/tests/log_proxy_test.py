@@ -7,7 +7,7 @@ import logging
 from pythonic_testcase import *
 from testfixtures import LogCapture
 
-from log_proxy import get_logger
+from .. import get_logger
 
 
 class LogProxyTest(PythonicTestCase):

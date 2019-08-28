@@ -1,0 +1,6 @@
+
+include dev_requirements.txt
+include LICENSE.txt
+include pyproject.toml
+include VERSION.txt
+
