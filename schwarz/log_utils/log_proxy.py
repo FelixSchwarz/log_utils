@@ -33,6 +33,7 @@ import sys
 __all__ = [
     'contextfile_logger', 'get_logger', 'l_', 'log_', 'ForwardingLogger',
     'CollectingHandler',
+    'NullLogger',
 ]
 
 # This is added for backwards-compatibility with Python 2.6
