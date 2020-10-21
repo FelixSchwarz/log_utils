@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2013-2016 Felix Schwarz
 # The source code contained in this file is licensed under the MIT license.
+# SPDX-License-Identifier: MIT
 
 import logging
 
