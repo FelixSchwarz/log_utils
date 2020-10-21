@@ -22,3 +22,23 @@ This library should solve all these problems with a helper function:
 - The caller can also pass a pre-configured logger (e.g. to test the emitted log messages easily or to use customized logging mechanisms).
 
 
+CallbackLogger
+--------------------------------
+
+A `Logger`-like class which can trigger a additional callback in addition to passing a log message through the logging infrastructure. I'm using this to ensure severe problems logged by lower-level libraries will be displayed in the UI. If you set `merge_arguments = True` the callback only gets the final message (as `str`), otherwise it'll get the `logging.LogRecord`.
+
+**Usage:**
+
+```python
+import logging
+from schwarz.log_utils import CallbackLogger
+
+_l = logging.getLogger('foo')
+logged_msgs = []
+cb = logged_msgs.append
+log = CallbackLogger(log=_l, callback=cb, callback_minlevel=logging.ERROR, merge_arguments=True)
+log.info('info message')
+log.error('error message')
+logged_msgs == ['error message']
+```
+
