@@ -11,7 +11,7 @@ from testfixtures import LogCapture
 from .. import get_logger
 
 
-class LogProxyTest(PythonicTestCase):
+class GetLoggerTest(PythonicTestCase):
     def test_can_return_regular_python_loggers(self):
         with LogCapture() as l_:
             log = get_logger('bar')
