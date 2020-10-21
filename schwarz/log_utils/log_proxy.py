@@ -47,7 +47,7 @@ class NullLogger(logging.Logger):
 
 class ForwardingLogger(logging.Logger):
     """
-    This logger fowards messages above a certain level (by default: all messages)
+    This logger forwards messages above a certain level (by default: all messages)
     to a configured parent logger. Optionally it can prepend the configured
     "forward_prefix" to all *forwarded* log messages.
     "forward_suffix" works like "forward_prefix" but appends some string.
