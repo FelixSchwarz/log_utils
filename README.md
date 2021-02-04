@@ -44,3 +44,25 @@ log.error('error message')
 logged_msgs == ['error message']
 ```
 
+
+Support for writing tests
+--------------------------------
+
+The library also contains some helpers to ease writing logging-related tests.
+
+```python
+import logging
+from schwarz.log_utils.testutils import *
+
+# "lc" works a bit similar to a LogCapture instance
+log, lc = build_collecting_logger()
+log.info('foo')
+log.debug('bar')
+
+assert_did_log_message(lc, 'foo')
+assert_did_log_message(lc, 'foo', level=logging.INFO)
+# this raises an AssertionError as "foo" was logged with INFO
+assert_did_log_message(lc, 'foo', level=logging.DEBUG)
+assert_no_log_messages(lc, min_level=logging.WARN)
+```
+
