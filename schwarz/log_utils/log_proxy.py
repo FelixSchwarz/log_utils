@@ -158,10 +158,10 @@ class CollectingHandler(MemoryHandler):
     Flushing only works if a target was set.
     """
     def __init__(self, capacity=10000, flush_level=logging.ERROR, target=None):
-        super().__init__(capacity, flushLevel=flush_level, target=target)
+        super(CollectingHandler, self).__init__(capacity, flushLevel=flush_level, target=target)
 
     def shouldFlush(self, record):
-        should_flush = super().shouldFlush(record)
+        should_flush = super(CollectingHandler, self).shouldFlush(record)
         if should_flush and self.capacity > 0:
             # disable buffering after the first flush was necessary...
             self.capacity = 0
