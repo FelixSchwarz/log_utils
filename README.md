@@ -3,6 +3,8 @@ schwarzlog
 
 Library to add some missing functionality in Python's `logging` module.
 
+    $ pip install schwarzlog
+
 Caveat: Most functionality is currently not documented. I'll to write some docs going forward, though.
 
 
