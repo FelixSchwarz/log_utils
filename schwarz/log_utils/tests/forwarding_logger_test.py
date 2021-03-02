@@ -33,13 +33,3 @@ class ForwardingLoggerTest(PythonicTestCase):
             wrapped_log.info('hello world')
         l_.check(('bar', 'INFO', 'hello world (foo)'),)
 
-    def test_no_output_to_lastresort_if_contains_forwarding_logger(self):
-        with LogCapture() as l_:
-            log = get_logger('bar')
-            wrapped_log = ForwardingLogger(forward_to=log, forward_suffix=' (foo)')
-            assert_is_empty(wrapped_log.handlers)
-            wrapped_log.info('hello world')
-        l_.check(('bar', 'INFO', 'hello world (foo)'),)
-        assert_is_empty(self.log_helper.unclaimed_logs.buffer,
-            message='user might see output on STDERR')
-

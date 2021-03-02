@@ -72,8 +72,6 @@ class LogHelper(object):
         self._loggers = set()
         self._initial_function = None
         self._globals = None
-        self._last_resort = None
-        self.unclaimed_logs = CollectingHandler()
 
     @classmethod
     def set_up(cls, test=None, globals_=None):
@@ -89,8 +87,6 @@ class LogHelper(object):
             globals_['get_logger'] = self.get_logger
             self._globals = globals_
         log_proxy.get_logger = self.get_logger
-        self._last_resort = logging.lastResort
-        logging.lastResort = self.unclaimed_logs
 
     def get_logger(self, *logger_args, **logger_kwargs):
         logger = self._initial_function(*logger_args, **logger_kwargs)
@@ -104,6 +100,5 @@ class LogHelper(object):
         manager = logging.Logger.manager
         for logger_name in self._loggers:
             manager.loggerDict.pop(logger_name, None)
-        logging.lastResort = self._last_resort
         self._loggers = set()
 
