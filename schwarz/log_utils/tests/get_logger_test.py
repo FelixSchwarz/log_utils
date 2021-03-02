@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2013-2016 Felix Schwarz
+# Copyright (c) 2013-2016, 2019 Felix Schwarz
 # The source code contained in this file is licensed under the MIT license.
 # SPDX-License-Identifier: MIT
 
@@ -8,10 +8,14 @@ import logging
 from pythonic_testcase import *
 from testfixtures import LogCapture
 
-from .. import get_logger
+from ..log_proxy import get_logger
+from ..testutils import LogHelper
 
 
 class GetLoggerTest(PythonicTestCase):
+    def setUp(self):
+        self.log_helper = LogHelper.set_up(test=self, globals_=globals())
+
     def test_can_return_regular_python_loggers(self):
         with LogCapture() as l_:
             log = get_logger('bar')
@@ -47,4 +51,11 @@ class GetLoggerTest(PythonicTestCase):
             pylog = logging.getLogger('foo')
             pylog.info('should log this')
             l_.check(('foo', 'INFO', 'should log this'),)
+
+    def test_can_pass_log_level(self):
+        with LogCapture() as l_:
+            log = get_logger('bar', level=logging.WARN)
+            log.info('hello world')
+            log.warn('something went wrong!')
+        l_.check(('bar', 'WARNING', 'something went wrong!'),)
 
