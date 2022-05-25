@@ -19,9 +19,9 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -e .[testing]
-        pip install nose
+        pip install pytest
 
     - name: Run test suite
       run: |
-        nosetests
+        pytest
 

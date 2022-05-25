@@ -9,4 +9,5 @@ __pycache__
 .pydevproject
 .eggs
 venv*
+/.pytest_cache/
 /*.sh
