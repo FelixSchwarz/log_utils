@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2013-2016, 2019 Felix Schwarz
+# Copyright (c) 2013-2016, 2019, 2022 Felix Schwarz
 # The source code contained in this file is licensed under the MIT license.
 # SPDX-License-Identifier: MIT
 
 import logging
+import sys
 
 from pythonic_testcase import *
 from testfixtures import LogCapture
@@ -33,7 +34,9 @@ class GetLoggerTest(PythonicTestCase):
         with LogCapture() as l_:
             log = get_logger('foo', log=False)
             log.debug('foo %s', 'bar')
-            log.warn('foo %s', 'bar')
+            if sys.version_info < (3, 0):
+                # using "log.warn()" triggers a DeprecationWarning in Python 3
+                log.warn('foo %s', 'bar')
             log.warning('foo %s', 'bar')
             log.error('foo %s', 'bar')
             # need to cause an exception so log.exception works...
@@ -56,6 +59,6 @@ class GetLoggerTest(PythonicTestCase):
         with LogCapture() as l_:
             log = get_logger('bar', level=logging.WARN)
             log.info('hello world')
-            log.warn('something went wrong!')
+            log.warning('something went wrong!')
         l_.check(('bar', 'WARNING', 'something went wrong!'),)
 

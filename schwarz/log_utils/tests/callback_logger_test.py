@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020 Felix Schwarz
+# Copyright (c) 2020, 2022 Felix Schwarz
 # The source code contained in this file is licensed under the MIT license.
 # SPDX-License-Identifier: MIT
 
@@ -22,7 +22,7 @@ class CallbackLoggerTest(PythonicTestCase):
             l.info('regular message')
             assert_length(0, callback_msgs)
     
-            l.warn('some warning')
+            l.warning('some warning')
             assert_equals(['some warning'], callback_msgs)
     
             l.error('serious problem')
