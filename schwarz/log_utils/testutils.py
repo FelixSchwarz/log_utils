@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2021 Felix Schwarz
+# Copyright (c) 2020-2022 Felix Schwarz
 # The source code contained in this file is licensed under the MIT license.
 # SPDX-License-Identifier: MIT
 
@@ -28,7 +28,9 @@ def assert_did_log_message(log_capture, expected_msg, level=None):
         if logged_msg == expected_msg:
             if (level is not None) and (log_record.levelno != level):
                 raise AssertionError('expected log level %s but logged message has %s: %s' % (level, log_record.levelno, expected_msg))
-            return
+            # returning the log record is helpful so that the caller can
+            # inspect the logged data in detail (e.g. check ".exc_info").
+            return log_record
 
     log_messages = [lr.getMessage() for lr in lc.records]
     raise AssertionError('message not logged: "%s" - did log %s' % (expected_msg, log_messages))

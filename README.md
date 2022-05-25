@@ -60,9 +60,21 @@ log.info('foo')
 log.debug('bar')
 
 assert_did_log_message(lc, 'foo')
-assert_did_log_message(lc, 'foo', level=logging.INFO)
 # this raises an AssertionError as "foo" was logged with INFO
 assert_did_log_message(lc, 'foo', level=logging.DEBUG)
+
+lr = assert_did_log_message(lc, 'foo', level=logging.INFO)
+# you can also inspect the actual "LogRecord" instance "lr" if you need to
+
 assert_no_log_messages(lc, min_level=logging.WARN)
 ```
+
+
+Changes
+--------------------------------
+
+**0.6.2** (2022-05-25)
+
+- `assert_did_log_message(…)` now returns the `LogRecord` instance which can
+   be used by the caller for more detailled checks.
 
