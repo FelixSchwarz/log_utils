@@ -1,5 +1,6 @@
 /build
 /dist
+/pip-wheel-metadata
 *.pyc
 *.egg-info
 __pycache__
