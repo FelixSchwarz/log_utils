@@ -19,7 +19,7 @@ class ForwardingLogger(logging.Logger):
     Python's default logging module can not handle this because
       a) a logger's log level is only applied for messages emitted directly on
          that logger (not for propagated log messages), see
-         http://mg.pov.lt/blog/logging-levels.html
+         https://mg.pov.lt/blog/logging-levels.html
       b) adding a log prefix only for certain loggers can only by done by
          duplicating handler configuration. Python's handlers are quite basic
          so if the duplicated handlers access a shared resource (e.g. a log file)

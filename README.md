@@ -23,6 +23,8 @@ This library should solve all these problems with a helper function:
 - If logging should be disabled entirely it just returns a fake logger which will discard all messages. The application doesn't have to be aware of this and no global state will be changed.
 - The caller can also pass a pre-configured logger (e.g. to test the emitted log messages easily or to use customized logging mechanisms).
 
+Since its inception this library was extended with a few useful helper functions and specialized logging classes.
+
 
 CallbackLogger
 --------------------------------
@@ -42,6 +44,35 @@ log = CallbackLogger(log=_l, callback=cb, callback_minlevel=logging.ERROR, merge
 log.info('info message')
 log.error('error message')
 logged_msgs == ['error message']
+```
+
+
+ForwardingLogger
+--------------------------------
+
+This logger forwards messages above a certain level (by default: all messages) to a configured parent logger. Optionally it can prepend the configured `forward_prefix` to all *forwarded* log messages. `forward_suffix` works like `forward_prefix` but appends some string.
+
+This can be helpful if you need to log contextualized messages. For example you could log detailed messages related to a specific file in "imgfile.log" but you want more important messages (e.g. warnings, errors) in another log file used by your application. In that scenario you can quickly spot problems in your main log file while detailed data is available in separate log files.
+
+Python's default logging module can not handle this because:
+
+- A `Logger`'s log level is only applied for messages emitted directly on that logger (not for propagated log messages), see this [blog post by Marius Gedminas](https://mg.pov.lt/blog/logging-levels.html).
+- Adding a log prefix only for certain loggers can only by done by duplicating handler configuration. Python's handlers are quite basic so if the duplicated handlers access a shared resource (e.g. a log file) Python will open it twice (which causes data loss if `mode='w'` is used).
+
+**Usage:**
+
+```python
+import logging
+from schwarz.log_utils import get_logger, ForwardingLogger
+
+parent_logger = logging.getLogger('foo')
+log = ForwardingLogger(
+    forward_to=parent_logger,
+    forward_prefix='[ABC] ',
+    forward_minlevel=logging.INFO
+)
+log.info('foo')
+# parent_logger sees a log message like "[ABC] foo"
 ```
 
 
