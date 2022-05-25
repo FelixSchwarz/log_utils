@@ -10,7 +10,7 @@ import logging
 from pythonic_testcase import *
 from testfixtures import LogCapture
 
-from ..log_proxy import get_logger, ForwardingLogger
+from .. import get_logger, ForwardingLogger
 from ..testutils import LogHelper
 
 
