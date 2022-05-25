@@ -54,8 +54,10 @@ class ForwardingLogger(logging.Logger):
                 msg += self._forward_suffix
             record_kwargs = {
                 'exc_info': record.exc_info,
-                'stack_info': record.stack_info,
             }
+            if hasattr(record, 'stack_info'):
+                # Python 3
+                record_kwargs['stack_info'] = record.stack_info
             self._forward_to.log(record.levelno, msg, *record.args, **record_kwargs)
 
     def _call_handlers(self, record):
