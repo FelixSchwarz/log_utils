@@ -77,4 +77,6 @@ Changes
 
 - `assert_did_log_message(…)` now returns the `LogRecord` instance which can
    be used by the caller for more detailled checks.
+- `ForwardingLogger` now also forwards `.exc_info` correctly so that the main
+   logger can also log exceptions.
 
