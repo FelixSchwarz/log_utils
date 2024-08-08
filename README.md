@@ -104,6 +104,11 @@ assert_no_log_messages(lc, min_level=logging.WARN)
 Changes
 --------------------------------
 
+**0.7.0** (2024-08-06)
+
+- drop support for Python 2
+
+
 **0.6.2** (2022-05-25)
 
 - `assert_did_log_message(…)` now returns the `LogRecord` instance which can
