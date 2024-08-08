@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2019, 2022 Felix Schwarz
+# Copyright (c) 2019, 2022, 2024 Felix Schwarz
 # The source code contained in this file is licensed under the MIT license.
 # SPDX-License-Identifier: MIT
 
@@ -8,7 +8,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 import logging
 from logging import Formatter as LogFormatter
 
-from pythonic_testcase import *
+from pythonic_testcase import PythonicTestCase
 from testfixtures import LogCapture
 
 from .. import get_logger, ForwardingLogger
@@ -47,7 +47,7 @@ class ForwardingLoggerTest(PythonicTestCase):
         l_.check(('bar', 'ERROR', '[FOO] caught error'),)
         lr, = l_.records
         logged_text = LogFormatter('%(message)s').format(lr)
-        assert_true(logged_text.startswith('[FOO] caught error'))
-        assert_contains('Traceback (most recent call last)', logged_text)
-        assert_contains('ValueError: ' + exc_msg, logged_text)
+        assert logged_text.startswith('[FOO] caught error')
+        assert 'Traceback (most recent call last)' in logged_text
+        assert ('ValueError: ' + exc_msg) in logged_text
 

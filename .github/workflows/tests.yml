@@ -22,7 +22,6 @@ jobs:
 
       - name: Run test suite
         run: |
-          pip install pytest
           pytest
 
 
@@ -48,5 +47,4 @@ jobs:
 
     - name: Run test suite
       run: |
-        pip install pytest
         pytest
