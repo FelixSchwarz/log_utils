@@ -31,7 +31,7 @@ class CallbackLogger(logging.Logger):
         if (not args) and ('name' not in kwargs):
             name = self.__class__.__name__
             args = (name, )
-        super(CallbackLogger, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def callHandlers(self, record):
         # "logging.NOTSET" (default) is defined as 0 so that works here just fine

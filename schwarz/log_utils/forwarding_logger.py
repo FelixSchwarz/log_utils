@@ -38,7 +38,7 @@ class ForwardingLogger(logging.Logger):
         if (not args) and ('name' not in kwargs):
             name = self.__class__.__name__
             args = (name, )
-        super(ForwardingLogger, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def callHandlers(self, record):
         nr_handlers = self._call_handlers(record)
@@ -54,10 +54,8 @@ class ForwardingLogger(logging.Logger):
                 msg += self._forward_suffix
             record_kwargs = {
                 'exc_info': record.exc_info,
+                'stack_info': record.stack_info,
             }
-            if hasattr(record, 'stack_info'):
-                # Python 3
-                record_kwargs['stack_info'] = record.stack_info
             self._forward_to.log(record.levelno, msg, *record.args, **record_kwargs)
 
     def _call_handlers(self, record):
